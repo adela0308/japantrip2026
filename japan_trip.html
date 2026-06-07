@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>日本行程規劃｜大阪 × 名古屋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --washi:#f1e8d9;
+    --washi2:#e9ddc8;
+    --paper:#fffdf7;
+    --paper-soft:#fbf6ec;
+    --sumi:#2a2a28;
+    --sumi-soft:#5b574f;
+    --ai:#27406b;          /* 藍染 indigo */
+    --ai-deep:#1b2c4c;
+    --ai-soft:#5e739c;
+    --shu:#c44a32;         /* 朱 vermilion */
+    --shu-soft:#e7d3cb;
+    --gold:#c79a3e;
+    --line:#ddd0ba;
+    --ok:#3f7d54;
+    --shadow:0 1px 2px rgba(40,30,15,.06),0 8px 24px -12px rgba(40,30,15,.22);
+    --shadow-lg:0 12px 40px -14px rgba(27,44,76,.4);
+    --r:16px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Noto Sans TC',system-ui,sans-serif;
+    color:var(--sumi);
+    background:
+      radial-gradient(circle at 12% 8%, rgba(196,74,50,.05), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(39,64,107,.07), transparent 45%),
+      var(--washi);
+    background-attachment:fixed;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+  /* ---------- Header ---------- */
+  header{padding:34px 4px 18px;text-align:center;position:relative}
+  .seal{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:54px;height:54px;border-radius:12px;
+    background:var(--shu);color:#fff;font-family:'Shippori Mincho B1',serif;
+    font-weight:800;font-size:26px;line-height:1;letter-spacing:1px;
+    box-shadow:0 6px 18px -6px rgba(196,74,50,.6);margin-bottom:14px;
+    transform:rotate(-3deg);writing-mode:vertical-rl;padding:5px 0;
+  }
+  h1{
+    font-family:'Shippori Mincho B1',serif;font-weight:800;
+    font-size:clamp(28px,7vw,42px);margin:0;letter-spacing:.06em;color:var(--ai-deep);
+  }
+  .sub{font-size:clamp(13px,3.4vw,16px);color:var(--sumi-soft);margin-top:8px;letter-spacing:.18em;font-weight:500}
+  .meta-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .chip-meta{
+    font-size:12.5px;background:var(--paper);border:1px solid var(--line);
+    padding:5px 12px;border-radius:999px;color:var(--ai);font-weight:700;letter-spacing:.05em;
+    box-shadow:var(--shadow);
+  }
+  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:22px 0 6px}
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:30;display:flex;gap:6px;justify-content:center;
+    padding:10px 0;margin:0 -16px 6px;
+    background:linear-gradient(var(--washi) 70%,transparent);
+    backdrop-filter:blur(2px);
+  }
+  .tab{
+    appearance:none;border:1px solid transparent;background:transparent;cursor:pointer;
+    font-family:'Noto Sans TC';font-size:14.5px;font-weight:700;color:var(--sumi-soft);
+    padding:9px 16px;border-radius:999px;transition:.2s;letter-spacing:.06em;
+  }
+  .tab .ja{font-family:'Shippori Mincho B1',serif;font-size:11px;display:block;opacity:.55;font-weight:600;letter-spacing:.15em}
+  .tab[aria-selected="true"]{background:var(--ai);color:#fff;box-shadow:var(--shadow)}
+  .tab[aria-selected="true"] .ja{opacity:.7}
+
+  /* ---------- Day selector ---------- */
+  .days-scroll{display:flex;gap:9px;overflow-x:auto;padding:6px 2px 14px;scrollbar-width:none;scroll-snap-type:x proximity}
+  .days-scroll::-webkit-scrollbar{display:none}
+  .day-chip{
+    flex:0 0 auto;scroll-snap-align:start;cursor:pointer;
+    min-width:62px;padding:11px 12px;border-radius:14px;text-align:center;
+    background:var(--paper);border:1px solid var(--line);transition:.18s;box-shadow:var(--shadow);
+  }
+  .day-chip .d{font-family:'Shippori Mincho B1',serif;font-weight:800;font-size:18px;color:var(--ai-deep);line-height:1}
+  .day-chip .dt{font-size:11px;color:var(--sumi-soft);margin-top:5px;white-space:nowrap}
+  .day-chip .wk{font-size:10.5px;color:var(--shu);font-weight:700;margin-top:2px}
+  .day-chip.active{background:var(--ai);border-color:var(--ai);transform:translateY(-2px)}
+  .day-chip.active .d{color:#fff}
+  .day-chip.active .dt{color:rgba(255,255,255,.8)}
+  .day-chip.active .wk{color:#ffd9b0}
+  .day-chip.add{display:flex;align-items:center;justify-content:center;min-width:48px;color:var(--ai-soft);font-size:24px;border-style:dashed}
+
+  .day-head{display:flex;align-items:baseline;gap:12px;margin:6px 2px 16px;flex-wrap:wrap}
+  .day-head h2{font-family:'Shippori Mincho B1',serif;font-size:24px;margin:0;color:var(--ai-deep);letter-spacing:.04em}
+  .day-head .date{color:var(--sumi-soft);font-size:14px;font-weight:500}
+  .day-head .del-day{margin-left:auto;font-size:12px;color:var(--shu);background:none;border:none;cursor:pointer;text-decoration:underline;opacity:.7}
+
+  /* ---------- Timeline cards ---------- */
+  .timeline{position:relative;padding-left:8px}
+  .stop{
+    position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:var(--r);padding:15px 16px 14px;margin-bottom:12px;box-shadow:var(--shadow);
+    transition:.2s;border-left:4px solid var(--ai);
+  }
+  .stop.done{opacity:.62;border-left-color:var(--ok)}
+  .stop.done .place{text-decoration:line-through;text-decoration-color:var(--sumi-soft)}
+  .stop-top{display:flex;align-items:flex-start;gap:11px}
+  .check{
+    flex:0 0 auto;width:23px;height:23px;border-radius:7px;border:2px solid var(--line);
+    background:var(--paper-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    margin-top:2px;transition:.15s;color:#fff;font-size:14px;font-weight:900;
+  }
+  .check.on{background:var(--ok);border-color:var(--ok)}
+  .stop-main{flex:1;min-width:0}
+  .place{font-weight:700;font-size:16.5px;color:var(--sumi);white-space:pre-line;word-break:break-word}
+  .time-badge{
+    display:inline-block;font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:13px;
+    color:var(--shu);background:var(--shu-soft);padding:2px 9px;border-radius:7px;margin-bottom:5px;letter-spacing:.04em;
+  }
+  .fields{margin-top:9px;display:flex;flex-direction:column;gap:6px}
+  .f{display:flex;gap:8px;font-size:13.5px;color:var(--sumi-soft);align-items:flex-start}
+  .f .ic{flex:0 0 auto;width:18px;text-align:center;opacity:.8;font-size:13px;margin-top:1px}
+  .f .v{white-space:pre-line;word-break:break-word}
+  .f a{color:var(--ai);text-decoration:none;border-bottom:1px dotted var(--ai-soft)}
+  .stop-actions{display:flex;gap:4px;margin-left:auto}
+  .icon-btn{
+    appearance:none;border:none;background:transparent;cursor:pointer;border-radius:8px;
+    width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+    color:var(--sumi-soft);font-size:15px;transition:.15s;
+  }
+  .icon-btn:hover{background:var(--washi2);color:var(--ai)}
+  .icon-btn.del:hover{color:var(--shu)}
+  .drag-handle{cursor:grab;touch-action:none;color:var(--ai-soft);font-size:17px;letter-spacing:-1px}
+  .drag-handle:hover{background:var(--washi2);color:var(--ai)}
+  .drag-handle:active{cursor:grabbing}
+  .stop.dragging{opacity:.92;box-shadow:var(--shadow-lg);transform:scale(1.015);border-left-color:var(--shu);position:relative;z-index:5;cursor:grabbing}
+  .stop.drag-ghost{opacity:.35;border-style:dashed}
+  .timeline.is-dragging .stop:not(.dragging){transition:transform .15s ease}
+
+  .add-stop{
+    width:100%;padding:13px;border:1.5px dashed var(--ai-soft);background:rgba(94,115,156,.06);
+    color:var(--ai);font-family:'Noto Sans TC';font-weight:700;font-size:14.5px;border-radius:14px;
+    cursor:pointer;margin-top:4px;transition:.18s;letter-spacing:.05em;
+  }
+  .add-stop:hover{background:rgba(94,115,156,.13)}
+
+  /* ---------- Wishlist ---------- */
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+  .wish{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--shadow);position:relative;display:flex;flex-direction:column}
+  .wish .tagline{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap}
+  .type-tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:6px;background:var(--ai);color:#fff;letter-spacing:.05em}
+  .type-tag.food{background:var(--shu)}
+  .stars{color:var(--gold);font-size:13px;letter-spacing:1px}
+  .wish h3{margin:0 0 6px;font-size:16px;font-weight:700;color:var(--sumi);font-family:'Shippori Mincho B1',serif}
+  .wish .winfo{font-size:13px;color:var(--sumi-soft);display:flex;flex-direction:column;gap:4px}
+  .wish .winfo .f .v{white-space:pre-line}
+  .wish-actions{display:flex;gap:4px;position:absolute;top:10px;right:8px}
+  .ig-link{margin-top:auto;padding-top:10px}
+  .ig-link a{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--shu);text-decoration:none;font-weight:700}
+
+  /* ---------- Checklist ---------- */
+  .sec{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);margin-bottom:13px;box-shadow:var(--shadow);overflow:hidden}
+  .sec-h{display:flex;align-items:center;gap:9px;padding:13px 16px;background:var(--paper-soft);border-bottom:1px solid var(--line)}
+  .sec-h .sq{width:9px;height:9px;background:var(--shu);border-radius:2px;transform:rotate(45deg)}
+  .sec-h h3{margin:0;font-size:15.5px;font-family:'Shippori Mincho B1',serif;font-weight:700;color:var(--ai-deep);letter-spacing:.06em}
+  .sec-h .count{margin-left:auto;font-size:12px;color:var(--sumi-soft);font-weight:700}
+  .citem{display:flex;gap:11px;padding:11px 16px;border-bottom:1px solid var(--washi2);align-items:flex-start}
+  .citem:last-child{border-bottom:none}
+  .citem .ctext{flex:1;font-size:14px;white-space:pre-line;word-break:break-word}
+  .citem.done .ctext{text-decoration:line-through;color:var(--sumi-soft)}
+  .citem .icon-btn{opacity:.5;transition:.15s}
+  .citem:hover .icon-btn{opacity:1}
+  .citem .icon-btn:hover{opacity:1}
+  .add-citem{display:flex;gap:8px;padding:10px 14px;background:var(--paper-soft)}
+  .add-citem input{flex:1;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-family:'Noto Sans TC';font-size:13.5px;background:var(--paper)}
+  .add-citem button{border:none;background:var(--ai);color:#fff;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC'}
+  .add-sec{width:100%;padding:12px;border:1.5px dashed var(--ai-soft);background:rgba(94,115,156,.06);color:var(--ai);font-weight:700;border-radius:14px;cursor:pointer;font-family:'Noto Sans TC';letter-spacing:.05em}
+
+  .empty{text-align:center;color:var(--sumi-soft);padding:40px 20px;font-size:14px}
+  .empty .big{font-size:34px;display:block;margin-bottom:10px;opacity:.4}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:24px 0 4px}
+  .tool{font-size:12.5px;background:var(--paper);border:1px solid var(--line);padding:7px 13px;border-radius:999px;color:var(--sumi-soft);cursor:pointer;font-family:'Noto Sans TC';font-weight:600;transition:.15s;display:inline-flex;gap:5px;align-items:center}
+  .tool:hover{color:var(--ai);border-color:var(--ai-soft)}
+  .save-state{text-align:center;font-size:11.5px;color:var(--sumi-soft);margin-top:10px;min-height:16px;letter-spacing:.05em}
+
+  /* ---------- Modal ---------- */
+  .ov{position:fixed;inset:0;background:rgba(27,30,40,.45);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-end;justify-content:center;padding:0}
+  .ov.show{display:flex}
+  @media(min-width:560px){.ov{align-items:center;padding:20px}}
+  .modal{
+    background:var(--paper);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
+    border-radius:22px 22px 0 0;box-shadow:var(--shadow-lg);padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+    animation:slideUp .25s ease;
+  }
+  @media(min-width:560px){.modal{border-radius:22px;animation:pop .2s ease}}
+  @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal h3{font-family:'Shippori Mincho B1',serif;margin:0 0 16px;font-size:20px;color:var(--ai-deep);letter-spacing:.05em}
+  .fl{display:block;font-size:12.5px;font-weight:700;color:var(--ai);margin:0 0 5px;letter-spacing:.04em}
+  .fg{margin-bottom:13px}
+  .modal input,.modal textarea,.modal select{
+    width:100%;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-family:'Noto Sans TC';
+    font-size:14.5px;background:var(--paper-soft);color:var(--sumi);transition:.15s;
+  }
+  .modal input:focus,.modal textarea:focus,.modal select:focus{outline:none;border-color:var(--ai);background:var(--paper);box-shadow:0 0 0 3px rgba(39,64,107,.1)}
+  .modal textarea{resize:vertical;min-height:62px;line-height:1.5}
+  .m-actions{display:flex;gap:10px;margin-top:18px}
+  .m-actions button{flex:1;padding:13px;border-radius:12px;font-family:'Noto Sans TC';font-weight:700;font-size:15px;cursor:pointer;border:none;letter-spacing:.06em}
+  .btn-primary{background:var(--ai);color:#fff;box-shadow:0 6px 18px -8px rgba(39,64,107,.7)}
+  .btn-ghost{background:var(--washi2);color:var(--sumi-soft)}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  .footnote{text-align:center;font-size:11px;color:var(--sumi-soft);margin-top:28px;line-height:1.7;opacity:.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="seal">日本</div>
+    <h1 id="title">日本行程規劃</h1>
+    <div class="sub" id="subtitle">大阪 × 名古屋</div>
+    <div class="meta-row">
+      <span class="chip-meta" id="tag">9天8夜</span>
+      <span class="chip-meta" id="daterange"></span>
+    </div>
+    <div class="rule"></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-view="days" aria-selected="true"><span class="ja">行程</span>每日行程</button>
+    <button class="tab" role="tab" data-view="wish" aria-selected="false"><span class="ja">名所</span>景點清單</button>
+    <button class="tab" role="tab" data-view="check" aria-selected="false"><span class="ja">準備</span>行前備忘</button>
+  </nav>
+
+  <main id="content"></main>
+
+  <div class="toolbar">
+    <button class="tool" id="exportBtn">⬇︎ 匯出備份</button>
+    <button class="tool" id="importBtn">⬆︎ 匯入</button>
+    <button class="tool" id="resetBtn">↺ 還原原始行程</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+  </div>
+  <div class="save-state" id="saveState"></div>
+  <div class="footnote">
+    在電腦與手機上用同一個帳號開啟本頁,行程會自動同步保存。<br>
+    建議偶爾「匯出備份」存成檔案,多一層保險。
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="ov" id="ov">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============ 種子資料 ============ */
+const SEED = {
+ "meta": {
+  "title": "日本行程規劃",
+  "subtitle": "大阪 × 名古屋",
+  "tag": "9天8夜",
+  "dateRange": "2026-06-17 ~ 2026-06-25"
+ },
+ "days": [
+  {
+   "id": "d1",
+   "dayNum": "Day 1",
+   "date": "2026-06-17",
+   "weekday": "週三",
+   "stops": [
+    {
+     "id": "s1",
+     "place": "桃園高鐵站",
+     "time": "14:30",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s2",
+     "place": "出發機場\n*Adela 因為有換護照，看一下快速通關要不要重瓣",
+     "time": "15:00",
+     "address": "桃園機場一航廈",
+     "food": "",
+     "transport": "",
+     "hotel": "Odysis Suites Osaka Airport Hotel \n標準雙床間帶灣景",
+     "note": "前120分鐘~50分鐘內完成報到/託運\n隨身物品+手提行李合計2件7kg\n託運2*20kg，總長總和不超過203cm",
+     "done": false
+    },
+    {
+     "id": "s3",
+     "place": "抵達大阪",
+     "time": "18:15-22:00",
+     "address": "關西機場二航廈",
+     "food": "",
+     "transport": "到飯店搭車/電車只要10分鐘\n南海特急南海特急快速ＲＡＰＩＴα 32付費特急南海難波\n關西機場線關西機場線快速電車京橋（大阪）",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s4",
+     "place": "Odysis Suites Osaka Airport Hotel",
+     "time": "23:00-",
+     "address": "1 Rinkuoraikita, Izumisano, Osaka 598-0048日本",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "詢問最後一天要去機場是否有協助\n入住15:00後；退房11:00前",
+     "done": false
+    },
+    {
+     "id": "s5",
+     "place": "7-Eleven 臨空松原店",
+     "time": "",
+     "address": "2-22 Rinkuoraiminami, Izumisano, Osaka 598-0047日本",
+     "food": "",
+     "transport": "走路10分鐘",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d2",
+   "dayNum": "Day 2",
+   "date": "2026-06-18",
+   "weekday": "週四",
+   "stops": [
+    {
+     "id": "s6",
+     "place": "起床買早餐",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "Odysis Suites Osaka Airport Hotel",
+     "note": "過了上班尖峰時間再去搭車，11:00前退房",
+     "done": false
+    },
+    {
+     "id": "s7",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "1hr",
+     "address": "2 Chome-7-28 Minamisenba, Chuo Ward, Osaka, 542-0081日本",
+     "food": "",
+     "transport": "",
+     "hotel": "Folio Sakura Shinsaibashi Osaka\n特大雙人床房\n免費早餐7:00-10:00",
+     "note": "放行李\n入住15-23；退房11:00前",
+     "done": false
+    },
+    {
+     "id": "s8",
+     "place": "勝尾寺",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s9",
+     "place": "回程到中崎町/梅田",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s10",
+     "place": "中崎町/梅田",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s11",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "看有沒有要先回去放東西",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s12",
+     "place": "晚餐",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s13",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "21:30 前",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d3",
+   "dayNum": "Day 3",
+   "date": "2026-06-19",
+   "weekday": "週五",
+   "stops": [
+    {
+     "id": "s14",
+     "place": "前往環球影城",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "30分鐘，電車至少都要轉2次",
+     "hotel": "",
+     "note": "避開上班尖峰",
+     "done": false
+    },
+    {
+     "id": "s15",
+     "place": "環球影城",
+     "time": "",
+     "address": "",
+     "food": "USJ 園區美食",
+     "transport": "",
+     "hotel": "",
+     "note": "KKday 買票",
+     "done": false
+    },
+    {
+     "id": "s16",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s17",
+     "place": "心齋橋",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s18",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "22:00 前",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d4",
+   "dayNum": "Day 4",
+   "date": "2026-06-20",
+   "weekday": "週六",
+   "stops": [
+    {
+     "id": "s19",
+     "place": "飯店早餐",
+     "time": "8:30-9:30",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "前幾天都很累，可以睡晚一點",
+     "done": false
+    },
+    {
+     "id": "s20",
+     "place": "租車行",
+     "time": "10:00",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s21",
+     "place": "明石海峽大橋",
+     "time": "10:00-11:30",
+     "address": "4 Higashimaikocho, Tarumi-ku, Kobe, Hyogo 655-0047日本",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s22",
+     "place": "午餐",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s23",
+     "place": "明石公園/明石城跡",
+     "time": "14:30後",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s24",
+     "place": "林崎崧江海岸",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s25",
+     "place": "租車行",
+     "time": "16:30-18:00",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s26",
+     "place": "心齋橋/道頓崛",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s27",
+     "place": "Folio Sakura Shinsaibashi Osaka Hotel",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d5",
+   "dayNum": "Day 5",
+   "date": "2026-06-21",
+   "weekday": "週日",
+   "stops": [
+    {
+     "id": "s28",
+     "place": "飯店早餐",
+     "time": "09:00-10:00",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s29",
+     "place": "道頓崛",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    },
+    {
+     "id": "s30",
+     "place": "大阪城(還沒想好放在哪裡)",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d6",
+   "dayNum": "Day 6",
+   "date": "2026-06-22",
+   "weekday": "週一",
+   "stops": [
+    {
+     "id": "s31",
+     "place": "大阪→名古屋",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "ACCESS by LOISIR HOTEL Nagoya\n標準雙人房",
+     "note": "15:00後入住；10:00前退房",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d7",
+   "dayNum": "Day 7",
+   "date": "2026-06-23",
+   "weekday": "週二",
+   "stops": [
+    {
+     "id": "s32",
+     "place": "東山動物園",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "動物園¥500，週一休",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d8",
+   "dayNum": "Day 8",
+   "date": "2026-06-24",
+   "weekday": "週三",
+   "stops": [
+    {
+     "id": "s33",
+     "place": "名古屋→大阪",
+     "time": "",
+     "address": "",
+     "food": "",
+     "transport": "",
+     "hotel": "Odysis Suites Osaka Airport Hotel \n標準雙床間帶灣景",
+     "note": "確認明日班機時間",
+     "done": false
+    }
+   ]
+  },
+  {
+   "id": "d9",
+   "dayNum": "Day 9",
+   "date": "2026-06-25",
+   "weekday": "週四",
+   "stops": [
+    {
+     "id": "s34",
+     "place": "前往關西機場",
+     "time": "",
+     "address": "關西機場二航廈",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "提早2小時到機場",
+     "done": false
+    },
+    {
+     "id": "s35",
+     "place": "抵達桃園",
+     "time": "07:50-09:55",
+     "address": "桃園機場一航廈",
+     "food": "",
+     "transport": "",
+     "hotel": "",
+     "note": "",
+     "done": false
+    }
+   ]
+  }
+ ],
+ "wishlist": [
+  {
+   "id": "w1",
+   "name": "環球影城 (USJ)",
+   "type": "景點",
+   "area": "大阪・此花區",
+   "address": "〒554-0031 大阪府大阪市此花区",
+   "hours": "9:00-21:00（依日期）",
+   "booking": "需購票（建議提前）",
+   "priority": "⭐⭐⭐",
+   "ig": "",
+   "note": ""
+  },
+  {
+   "id": "w2",
+   "name": "東山動植物園",
+   "type": "景點",
+   "area": "名古屋・千種區",
+   "address": "〒464-0804 名古屋市千種区",
+   "hours": "9:00-16:30，週一休",
+   "booking": "不需",
+   "priority": "⭐⭐⭐",
+   "ig": "",
+   "note": ""
+  },
+  {
+   "id": "w3",
+   "name": "道頓堀",
+   "type": "景點",
+   "area": "大阪・難波",
+   "address": "大阪市中央区道頓堀",
+   "hours": "全天",
+   "booking": "不需",
+   "priority": "⭐⭐⭐",
+   "ig": "",
+   "note": ""
+  },
+  {
+   "id": "w4",
+   "name": "黑門市場",
+   "type": "美食",
+   "area": "大阪・日本橋",
+   "address": "大阪市中央区日本橋",
+   "hours": "9:00-18:00（依店家）",
+   "booking": "不需",
+   "priority": "⭐⭐",
+   "ig": "",
+   "note": ""
+  },
+  {
+   "id": "w5",
+   "name": "名古屋城",
+   "type": "景點",
+   "area": "名古屋・中区",
+   "address": "名古屋市中区本丸",
+   "hours": "9:00-16:30，週一休",
+   "booking": "不需",
+   "priority": "⭐⭐",
+   "ig": "",
+   "note": ""
+  },
+  {
+   "id": "w6",
+   "name": "BB Amemura/ AMERICAN VILLAGE FREEMARKET",
+   "type": "購物/復古二手手錶",
+   "area": "大阪",
+   "address": "日本〒542-0086 Osaka, Chuo Ward, Nishishinsaibashi, 1 Chome−16−12 ニューアメリカンプラザビル 1階",
+   "hours": "11:00-22:00",
+   "booking": "不需",
+   "priority": "",
+   "ig": "https://www.instagram.com/reel/DUIXTEGklob/?igsh=MWFqN3lxNzlwZmhoNg==",
+   "note": ""
+  },
+  {
+   "id": "w7",
+   "name": "勝尾寺",
+   "type": "景點",
+   "area": "大阪 箕面市",
+   "address": "2914-1 Aomatani, Minoh, Osaka 562-8508日本",
+   "hours": "08:00-17:00 (六 18:00)",
+   "booking": "門票",
+   "priority": "⭐⭐⭐",
+   "ig": "https://www.instagram.com/reel/DRxaG-ukz9D/?igsh=MXg4OW0wZ25pamQzNA==",
+   "note": ""
+  },
+  {
+   "id": "w8",
+   "name": "Fusion Museum",
+   "type": "景點/博物館",
+   "area": "關西 和歌山市",
+   "address": "日本〒640-8033 Wakayama, Honmachi, 2 Chome−1 フォルテワジマ３F",
+   "hours": "10:00-19:00",
+   "booking": "免費入場",
+   "priority": "",
+   "ig": "https://www.instagram.com/reels/DUN-rz0AY86/",
+   "note": "一天限量28條，比較難保證"
+  },
+  {
+   "id": "w9",
+   "name": "京TRAIN雅洛號",
+   "type": "列車",
+   "area": "起：大阪梅田",
+   "address": "",
+   "hours": "例假日、國定假日",
+   "booking": "全車自由席",
+   "priority": "",
+   "ig": "https://www.hankyu.co.jp/kyotrain-garaku/zh-tw/\nhttps://www.instagram.com/reel/DP7_oqAkmTF/?igsh=dmMzMzNyMG0za3kz",
+   "note": "【雅洛號運行時刻表】\n大阪梅田 → 京都河原町\n• 09:32 → 10:15\n• 11:32 → 12:15\n• 13:32 → 14:15\n• 15:32 → 16:15\n京都河原町 → 大阪梅田\n• 10:41 → 11:28\n• 12:41 → 13:28\n• 14:41 → 15:28\n• 16:41 → 17:28\n＊沿途停靠：十三、淡路、桂、烏丸 等站\n＊僅例假日（週六、週日、國定假日）運行\n因無法劃位，建議在發車站（如大阪梅田站或京都河原町站）提早約 20～30 分鐘排隊候車，以便挑選喜歡的座位。"
+  },
+  {
+   "id": "w10",
+   "name": "明石市場",
+   "type": "",
+   "area": "",
+   "address": "2029-4 Fujie, Akashi, Hyogo 673-0044日本",
+   "hours": "09:00-21:45",
+   "booking": "不需",
+   "priority": "",
+   "ig": "https://www.instagram.com/reel/DS9zGWfkf5p/?igsh=MXN0Nno5NWE2cjFw",
+   "note": ""
+  },
+  {
+   "id": "w11",
+   "name": "明石公園",
+   "type": "景點/歷史地標",
+   "area": "",
+   "address": "1-27 Akashikoen, Akashi, Hyogo 673-0847日本",
+   "hours": "全天",
+   "booking": "不需",
+   "priority": "",
+   "ig": "http://hyogo-akashipark.jp/\nhttps://www.instagram.com/reel/DS9zGWfkf5p/?igsh=MXN0Nno5NWE2cjFw",
+   "note": ""
+  },
+  {
+   "id": "w12",
+   "name": "林崎松江海岸",
+   "type": "景點/海邊",
+   "area": "明石市 日本兵庫縣",
+   "address": "日本〒673-0036 Hyogo, Akashi, Matsue, 3 Chome 浜の散歩道",
+   "hours": "全天",
+   "booking": "不需",
+   "priority": "",
+   "ig": "https://www.instagram.com/reel/DS9zGWfkf5p/?igsh=MXN0Nno5NWE2cjFw",
+   "note": ""
+  },
+  {
+   "id": "w13",
+   "name": "飛行神社",
+   "type": "景點/神社",
+   "area": "",
+   "address": "",
+   "hours": "09:00-16:30",
+   "booking": "",
+   "priority": "",
+   "ig": "",
+   "note": "坐🚉京阪本線\n到📍石清水八幡宮駅\n出閘後往東走大概五分鐘"
+  }
+ ],
+ "checklist": [
+  {
+   "title": "入境前",
+   "items": [
+    {
+     "text": "Visit Japan 小卡",
+     "done": false
+    }
+   ]
+  },
+  {
+   "title": "票券預訂",
+   "items": [
+    {
+     "text": "環球影城門票｜建議至少提前2週購買，旺季提前1個月",
+     "done": false
+    },
+    {
+     "text": "東山動植物園｜現場購票即可，¥500",
+     "done": false
+    },
+    {
+     "text": "新幹線票｜可在台灣預購JR Pass（建議算好是否划算）",
+     "done": false
+    }
+   ]
+  },
+  {
+   "title": "交通",
+   "items": [
+    {
+     "text": "ICOCA 卡｜關西圈通用，大阪地鐵、JR皆可用",
+     "done": false
+    },
+    {
+     "text": "Manaca 卡｜名古屋地鐵通用",
+     "done": false
+    },
+    {
+     "text": "關西機場往返大阪市區，南海電鐵｜普通列車：可略過\n空港急行：車資 970，車程跟特急差不多\n特急Rapit：車資 1350（電子車票優惠），搭乘體驗最舒適",
+     "done": false
+    },
+    {
+     "text": "大阪公車",
+     "done": false
+    }
+   ]
+  },
+  {
+   "title": "住宿",
+   "items": [
+    {
+     "text": "Day 1 住宿｜Odysis Suites Osaka Airport Hotel",
+     "done": false
+    },
+    {
+     "text": "Day 2-5 住宿｜folio sakura shinsaibashi osaka by banyan group Hotel",
+     "done": false
+    },
+    {
+     "text": "Day 6-7 住宿｜ACCESS by LOISIR HOTEL Nagoya",
+     "done": false
+    },
+    {
+     "text": "Day 8 住宿｜Odysis Suites Osaka Airport Hotel",
+     "done": false
+    }
+   ]
+  },
+  {
+   "title": "實用APP",
+   "items": [
+    {
+     "text": "Google Maps｜景點導航",
+     "done": false
+    },
+    {
+     "text": "食べログ / Tabelog｜餐廳查詢評分",
+     "done": false
+    },
+    {
+     "text": "乘換案内｜日本電車路線規劃",
+     "done": false
+    },
+    {
+     "text": "Universal Studios Japan｜USJ官方APP，查等待時間",
+     "done": false
+    }
+   ]
+  },
+  {
+   "title": "伴手禮",
+   "items": [
+    {
+     "text": "京阪伴手禮",
+     "done": false
+    }
+   ]
+  }
+ ]
+};
+
+/* ============ 狀態 & 儲存 ============ */
+const KEY = 'trip:japan:v1';
+let state = null;
+let storageOK = (typeof window!=='undefined' && window.storage && typeof window.storage.get==='function');
+let curDayId = null;
+let curView = 'days';
+
+const $ = s => document.querySelector(s);
+const uid = p => p + Math.random().toString(36).slice(2,8) + Date.now().toString(36).slice(-3);
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function flash(msg){ const e=$('#saveState'); e.textContent=msg; clearTimeout(e._t); e._t=setTimeout(()=>e.textContent='',2200); }
+
+async function loadState(){
+  if(storageOK){
+    try{
+      const r = await window.storage.get(KEY);
+      if(r && r.value){ state = JSON.parse(r.value); return; }
+    }catch(e){ /* 第一次沒有資料,正常 */ }
+  }
+  state = JSON.parse(JSON.stringify(SEED));
+  await saveState(true);
+}
+let saveTimer=null;
+async function saveState(silent){
+  if(!storageOK){ if(!silent) flash('此環境無法自動保存,請使用匯出備份'); return; }
+  try{
+    await window.storage.set(KEY, JSON.stringify(state));
+    if(!silent) flash('已保存 ✓');
+  }catch(e){ flash('保存失敗,請匯出備份'); }
+}
+function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveState(false),250); }
+
+/* ============ 渲染 ============ */
+function renderHeader(){
+  $('#title').textContent = state.meta.title||'行程規劃';
+  $('#subtitle').textContent = state.meta.subtitle||'';
+  $('#tag').textContent = state.meta.tag||'';
+  $('#daterange').textContent = state.meta.dateRange||'';
+  $('#daterange').style.display = state.meta.dateRange? '':'none';
+}
+
+function mapLink(addr){
+  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr);
+}
+
+function render(){
+  renderHeader();
+  const c = $('#content');
+  if(curView==='days') c.innerHTML = renderDays();
+  else if(curView==='wish') c.innerHTML = renderWish();
+  else c.innerHTML = renderCheck();
+  bind();
+}
+
+function renderDays(){
+  const days = state.days;
+  if(!days.length) return `<div class="empty"><span class="big">🗾</span>還沒有任何天數<br>點下方新增第一天的行程吧</div>
+    <button class="add-stop" id="addDayEmpty">＋ 新增第一天</button>`;
+  if(!curDayId || !days.find(d=>d.id===curDayId)) curDayId = days[0].id;
+  const day = days.find(d=>d.id===curDayId);
+
+  const chips = days.map(d=>`
+    <div class="day-chip ${d.id===curDayId?'active':''}" data-day="${d.id}">
+      <div class="d">${esc(d.dayNum.replace('Day ','D'))}</div>
+      <div class="dt">${esc((d.date||'').slice(5))}</div>
+      <div class="wk">${esc(d.weekday||'')}</div>
+    </div>`).join('') + `<div class="day-chip add" id="addDay">＋</div>`;
+
+  const stops = day.stops.length ? day.stops.map(s=>stopCard(s)).join('')
+    : `<div class="empty" style="padding:24px"><span class="big">📍</span>這天還沒有安排</div>`;
+
+  return `
+    <div class="days-scroll">${chips}</div>
+    <div class="day-head">
+      <h2>${esc(day.dayNum)}</h2>
+      <span class="date">${esc(day.date)} ${esc(day.weekday)}</span>
+      <button class="del-day" data-delday="${day.id}">刪除這天</button>
+    </div>
+    <div class="timeline">${stops}</div>
+    <button class="add-stop" data-addstop="${day.id}">＋ 新增行程點</button>`;
+}
+
+function fieldRow(ic,val,isAddr){
+  if(!val) return '';
+  const v = isAddr
+    ? `<a href="${mapLink(val)}" target="_blank" rel="noopener">${esc(val)}</a>`
+    : esc(val);
+  return `<div class="f"><span class="ic">${ic}</span><span class="v">${v}</span></div>`;
+}
+function stopCard(s){
+  return `
+  <div class="stop ${s.done?'done':''}" data-id="${s.id}">
+    <div class="stop-top">
+      <div class="check ${s.done?'on':''}" data-check="${s.id}">${s.done?'✓':''}</div>
+      <div class="stop-main">
+        ${s.time?`<div class="time-badge">${esc(s.time)}</div>`:''}
+        <div class="place">${esc(s.place)||'<span style="color:var(--sumi-soft)">未命名</span>'}</div>
+        <div class="fields">
+          ${fieldRow('📍',s.address,true)}
+          ${fieldRow('🍽',s.food)}
+          ${fieldRow('🚃',s.transport)}
+          ${fieldRow('🏨',s.hotel)}
+          ${fieldRow('📝',s.note)}
+        </div>
+      </div>
+      <div class="stop-actions">
+        <button class="icon-btn drag-handle" data-handle="${s.id}" title="拖曳排序" aria-label="拖曳排序">⠿</button>
+        <button class="icon-btn" data-edit="${s.id}" title="編輯">✎</button>
+        <button class="icon-btn del" data-delstop="${s.id}" title="刪除">🗑</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderWish(){
+  const w = state.wishlist;
+  const cards = w.length ? w.map(it=>{
+    const isFood = (it.type||'').includes('美食')||(it.type||'').includes('食');
+    return `<div class="wish" data-id="${it.id}">
+      <div class="wish-actions">
+        <button class="icon-btn" data-editwish="${it.id}">✎</button>
+        <button class="icon-btn del" data-delwish="${it.id}">🗑</button>
+      </div>
+      <div class="tagline">
+        ${it.type?`<span class="type-tag ${isFood?'food':''}">${esc(it.type)}</span>`:''}
+        ${it.priority?`<span class="stars">${esc(it.priority)}</span>`:''}
+      </div>
+      <h3>${esc(it.name)}</h3>
+      <div class="winfo">
+        ${fieldRow('📍',[it.area,it.address].filter(Boolean).join(' · '),false)}
+        ${fieldRow('🕘',it.hours)}
+        ${fieldRow('🎟',it.booking)}
+        ${fieldRow('📝',it.note)}
+      </div>
+      ${it.ig?`<div class="ig-link"><a href="${esc(it.ig)}" target="_blank" rel="noopener">↗ 參考連結 / IG</a></div>`:''}
+    </div>`;
+  }).join('') : `<div class="empty"><span class="big">📋</span>清單是空的,新增想去的地方吧</div>`;
+  return `<div class="grid">${cards}</div>
+    <button class="add-stop" id="addWish" style="margin-top:14px">＋ 新增景點 / 美食</button>`;
+}
+
+function renderCheck(){
+  const secs = state.checklist;
+  const html = secs.map((sec,si)=>{
+    const done = sec.items.filter(i=>i.done).length;
+    const items = sec.items.map((it,ii)=>`
+      <div class="citem ${it.done?'done':''}">
+        <div class="check ${it.done?'on':''}" data-citem="${si}_${ii}">${it.done?'✓':''}</div>
+        <div class="ctext">${esc(it.text)}</div>
+        <button class="icon-btn" data-editcitem="${si}_${ii}" title="編輯">✎</button>
+        <button class="icon-btn del" data-delcitem="${si}_${ii}" title="刪除">🗑</button>
+      </div>`).join('');
+    return `<div class="sec">
+      <div class="sec-h"><span class="sq"></span><h3>${esc(sec.title)}</h3>
+        <span class="count">${done}/${sec.items.length}</span>
+        <button class="icon-btn" data-editsec="${si}" title="分類改名" style="margin-left:6px">✎</button>
+        <button class="icon-btn del" data-delsec="${si}" title="刪除分類">🗑</button>
+      </div>
+      ${items}
+      <div class="add-citem">
+        <input type="text" placeholder="新增項目…" data-newitem="${si}">
+        <button data-additem="${si}">加入</button>
+      </div>
+    </div>`;
+  }).join('');
+  return html + `<button class="add-sec" id="addSec">＋ 新增分類</button>`;
+}
+
+/* ============ 事件 ============ */
+function bind(){
+  document.querySelectorAll('[data-day]').forEach(el=>el.onclick=()=>{curDayId=el.dataset.day;render();});
+  const ad=$('#addDay')||$('#addDayEmpty'); if(ad) ad.onclick=addDay;
+  document.querySelectorAll('[data-addstop]').forEach(el=>el.onclick=()=>openStopModal(el.dataset.addstop,null));
+  document.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>openStopModal(curDayId,el.dataset.edit));
+  document.querySelectorAll('[data-check]').forEach(el=>el.onclick=()=>toggleStop(el.dataset.check));
+  document.querySelectorAll('[data-delstop]').forEach(el=>el.onclick=()=>delStop(el.dataset.delstop));
+  document.querySelectorAll('[data-delday]').forEach(el=>el.onclick=()=>delDay(el.dataset.delday));
+
+  if($('#addWish')) $('#addWish').onclick=()=>openWishModal(null);
+  document.querySelectorAll('[data-editwish]').forEach(el=>el.onclick=()=>openWishModal(el.dataset.editwish));
+  document.querySelectorAll('[data-delwish]').forEach(el=>el.onclick=()=>delWish(el.dataset.delwish));
+
+  document.querySelectorAll('[data-citem]').forEach(el=>el.onclick=()=>toggleCitem(el.dataset.citem));
+  document.querySelectorAll('[data-additem]').forEach(el=>el.onclick=()=>addCitem(el.dataset.additem));
+  document.querySelectorAll('[data-newitem]').forEach(el=>el.onkeydown=e=>{if(e.key==='Enter')addCitem(el.dataset.newitem);});
+  document.querySelectorAll('[data-delcitem]').forEach(el=>el.onclick=()=>delCitem(el.dataset.delcitem));
+  document.querySelectorAll('[data-editcitem]').forEach(el=>el.onclick=()=>editCitem(el.dataset.editcitem));
+  document.querySelectorAll('[data-editsec]').forEach(el=>el.onclick=()=>editSec(el.dataset.editsec));
+  document.querySelectorAll('[data-delsec]').forEach(el=>el.onclick=()=>delSec(el.dataset.delsec));
+  if($('#addSec')) $('#addSec').onclick=addSec;
+
+  enableDragSort();
+}
+
+/* ===== 拖曳排序(滑鼠 + 觸控) ===== */
+function enableDragSort(){
+  const list = document.querySelector('.timeline');
+  if(!list) return;
+  let dragEl=null, pid=null, moved=false;
+
+  list.querySelectorAll('.drag-handle').forEach(h=>{
+    h.addEventListener('pointerdown', e=>{
+      e.preventDefault();
+      dragEl = h.closest('.stop');
+      if(!dragEl) return;
+      pid = e.pointerId; moved=false;
+      try{ h.setPointerCapture(pid); }catch(_){}
+      dragEl.classList.add('dragging');
+      list.classList.add('is-dragging');
+      document.body.style.userSelect='none';
+
+      const onMove = ev=>{
+        moved=true;
+        const after = afterElement(list, ev.clientY);
+        if(after==null){ if(list.lastElementChild!==dragEl) list.appendChild(dragEl); }
+        else if(after!==dragEl){ list.insertBefore(dragEl, after); }
+      };
+      const onUp = ()=>{
+        h.removeEventListener('pointermove', onMove);
+        h.removeEventListener('pointerup', onUp);
+        h.removeEventListener('pointercancel', onUp);
+        try{ h.releasePointerCapture(pid); }catch(_){}
+        list.classList.remove('is-dragging');
+        document.body.style.userSelect='';
+        if(dragEl) dragEl.classList.remove('dragging');
+        if(moved) commitOrder(list);
+        dragEl=null;
+      };
+      h.addEventListener('pointermove', onMove);
+      h.addEventListener('pointerup', onUp);
+      h.addEventListener('pointercancel', onUp);
+    });
+  });
+}
+function afterElement(list, y){
+  const els=[...list.querySelectorAll('.stop:not(.dragging)')];
+  for(const el of els){
+    const r=el.getBoundingClientRect();
+    if(y < r.top + r.height/2) return el;
+  }
+  return null;
+}
+function commitOrder(list){
+  const ids=[...list.querySelectorAll('.stop')].map(el=>el.dataset.id);
+  const d=state.days.find(x=>x.id===curDayId); if(!d) return;
+  d.stops.sort((a,b)=>ids.indexOf(a.id)-ids.indexOf(b.id));
+  persist(); render(); flash('已更新順序 ✓');
+}
+
+/* 行程點 */
+function toggleStop(id){
+  const d=state.days.find(x=>x.id===curDayId); const s=d.stops.find(x=>x.id===id);
+  s.done=!s.done; persist(); render();
+}
+function delStop(id){
+  if(!confirm('確定刪除這個行程點?')) return;
+  const d=state.days.find(x=>x.id===curDayId); d.stops=d.stops.filter(x=>x.id!==id); persist(); render();
+}
+function openStopModal(dayId,stopId){
+  const d=state.days.find(x=>x.id===dayId);
+  const s = stopId ? d.stops.find(x=>x.id===stopId) : {place:'',time:'',address:'',food:'',transport:'',hotel:'',note:''};
+  modal(`
+    <h3>${stopId?'編輯行程點':'新增行程點'}</h3>
+    <div class="fg"><label class="fl">地點 / 行程</label><input id="f_place" value="${esc(s.place)}" placeholder="例:勝尾寺"></div>
+    <div class="fg"><label class="fl">時間</label><input id="f_time" value="${esc(s.time)}" placeholder="例:10:00-11:30"></div>
+    <div class="fg"><label class="fl">地址</label><input id="f_address" value="${esc(s.address)}" placeholder="貼上地址即可一鍵開地圖"></div>
+    <div class="two-col">
+      <div class="fg"><label class="fl">餐廳 / 美食</label><input id="f_food" value="${esc(s.food)}"></div>
+      <div class="fg"><label class="fl">交通</label><input id="f_transport" value="${esc(s.transport)}"></div>
+    </div>
+    <div class="fg"><label class="fl">住宿</label><input id="f_hotel" value="${esc(s.hotel)}"></div>
+    <div class="fg"><label class="fl">備註</label><textarea id="f_note">${esc(s.note)}</textarea></div>
+    <div class="m-actions">
+      <button class="btn-ghost" data-close>取消</button>
+      <button class="btn-primary" id="saveStop">儲存</button>
+    </div>`);
+  $('#saveStop').onclick=()=>{
+    const nv={place:$('#f_place').value.trim(),time:$('#f_time').value.trim(),address:$('#f_address').value.trim(),
+      food:$('#f_food').value.trim(),transport:$('#f_transport').value.trim(),hotel:$('#f_hotel').value.trim(),
+      note:$('#f_note').value.trim()};
+    if(stopId){ Object.assign(s,nv); }
+    else { d.stops.push({id:uid('s'),done:false,...nv}); }
+    closeModal(); persist(); render();
+  };
+}
+function addDay(){
+  const last=state.days[state.days.length-1];
+  let nextDate='';
+  if(last && last.date){ const dt=new Date(last.date+'T00:00:00'); dt.setDate(dt.getDate()+1);
+    nextDate=dt.toISOString().slice(0,10);
+    var wk=['週日','週一','週二','週三','週四','週五','週六'][dt.getDay()]; }
+  const n=state.days.length+1;
+  state.days.push({id:uid('d'),dayNum:'Day '+n,date:nextDate,weekday:nextDate?wk:'',stops:[]});
+  curDayId=state.days[state.days.length-1].id;
+  persist(); render();
+}
+function delDay(id){
+  if(!confirm('確定刪除這一整天的行程?')) return;
+  state.days=state.days.filter(d=>d.id!==id);
+  state.days.forEach((d,i)=>{ if(/^Day \d+$/.test(d.dayNum)) d.dayNum='Day '+(i+1); });
+  curDayId=state.days[0]?.id||null; persist(); render();
+}
+
+/* 景點清單 */
+function delWish(id){ if(!confirm('刪除此項?'))return; state.wishlist=state.wishlist.filter(w=>w.id!==id); persist(); render(); }
+function openWishModal(id){
+  const it = id ? state.wishlist.find(w=>w.id===id) : {name:'',type:'景點',area:'',address:'',hours:'',booking:'',priority:'',ig:'',note:''};
+  modal(`
+    <h3>${id?'編輯':'新增'}景點 / 美食</h3>
+    <div class="fg"><label class="fl">名稱</label><input id="w_name" value="${esc(it.name)}" placeholder="例:黑門市場"></div>
+    <div class="two-col">
+      <div class="fg"><label class="fl">類型</label><input id="w_type" value="${esc(it.type)}" placeholder="景點 / 美食"></div>
+      <div class="fg"><label class="fl">優先度</label><input id="w_priority" value="${esc(it.priority)}" placeholder="⭐⭐⭐"></div>
+    </div>
+    <div class="fg"><label class="fl">區域</label><input id="w_area" value="${esc(it.area)}" placeholder="大阪・難波"></div>
+    <div class="fg"><label class="fl">地址</label><input id="w_address" value="${esc(it.address)}"></div>
+    <div class="two-col">
+      <div class="fg"><label class="fl">營業時間</label><input id="w_hours" value="${esc(it.hours)}"></div>
+      <div class="fg"><label class="fl">預約需求</label><input id="w_booking" value="${esc(it.booking)}"></div>
+    </div>
+    <div class="fg"><label class="fl">參考連結 / IG</label><input id="w_ig" value="${esc(it.ig)}" placeholder="https://..."></div>
+    <div class="fg"><label class="fl">備註</label><textarea id="w_note">${esc(it.note)}</textarea></div>
+    <div class="m-actions">
+      <button class="btn-ghost" data-close>取消</button>
+      <button class="btn-primary" id="saveWish">儲存</button>
+    </div>`);
+  $('#saveWish').onclick=()=>{
+    const nv={name:$('#w_name').value.trim(),type:$('#w_type').value.trim(),area:$('#w_area').value.trim(),
+      address:$('#w_address').value.trim(),hours:$('#w_hours').value.trim(),booking:$('#w_booking').value.trim(),
+      priority:$('#w_priority').value.trim(),ig:$('#w_ig').value.trim(),note:$('#w_note').value.trim()};
+    if(!nv.name){ alert('請輸入名稱'); return; }
+    if(id) Object.assign(it,nv); else state.wishlist.push({id:uid('w'),...nv});
+    closeModal(); persist(); render();
+  };
+}
+
+/* 備忘清單 */
+function toggleCitem(k){ const[si,ii]=k.split('_').map(Number); const it=state.checklist[si].items[ii]; it.done=!it.done; persist(); render(); }
+function addCitem(si){ si=Number(si); const inp=document.querySelector(`[data-newitem="${si}"]`); const v=inp.value.trim(); if(!v)return;
+  state.checklist[si].items.push({text:v,done:false}); persist(); render(); }
+function delCitem(k){ const[si,ii]=k.split('_').map(Number); state.checklist[si].items.splice(ii,1); persist(); render(); }
+function editCitem(k){
+  const[si,ii]=k.split('_').map(Number);
+  const it=state.checklist[si].items[ii];
+  modal(`
+    <h3>編輯項目</h3>
+    <div class="fg"><label class="fl">內容</label><textarea id="c_text">${esc(it.text)}</textarea></div>
+    <div class="m-actions">
+      <button class="btn-ghost" data-close>取消</button>
+      <button class="btn-primary" id="saveCitem">儲存</button>
+    </div>`);
+  const ta=$('#c_text'); ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length);
+  $('#saveCitem').onclick=()=>{ const v=ta.value.trim(); if(!v){alert('內容不可空白');return;}
+    it.text=v; closeModal(); persist(); render(); flash('已更新 ✓'); };
+}
+function editSec(si){
+  si=Number(si); const sec=state.checklist[si];
+  modal(`
+    <h3>分類改名</h3>
+    <div class="fg"><label class="fl">分類名稱</label><input id="s_title" value="${esc(sec.title)}"></div>
+    <div class="m-actions">
+      <button class="btn-ghost" data-close>取消</button>
+      <button class="btn-primary" id="saveSec">儲存</button>
+    </div>`);
+  const inp=$('#s_title'); inp.focus(); inp.select();
+  $('#saveSec').onclick=()=>{ const v=inp.value.trim(); if(!v){alert('名稱不可空白');return;}
+    sec.title=v; closeModal(); persist(); render(); flash('已更新 ✓'); };
+}
+function delSec(si){ if(!confirm('刪除整個分類?'))return; state.checklist.splice(Number(si),1); persist(); render(); }
+function addSec(){ const t=prompt('分類名稱?'); if(!t)return; state.checklist.push({title:t.trim(),items:[]}); persist(); render(); }
+
+/* ============ Modal helpers ============ */
+function modal(html){ $('#modal').innerHTML=html; $('#ov').classList.add('show');
+  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal); }
+function closeModal(){ $('#ov').classList.remove('show'); $('#modal').innerHTML=''; }
+$('#ov').onclick=e=>{ if(e.target===$('#ov')) closeModal(); };
+
+/* ============ Tabs ============ */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+  t.setAttribute('aria-selected','true'); curView=t.dataset.view; render();
+  $('#content').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+/* ============ 匯出 / 匯入 / 還原 ============ */
+$('#exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='日本行程備份_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+  URL.revokeObjectURL(a.href); flash('已匯出備份檔');
+};
+$('#importBtn').onclick=()=>$('#importFile').click();
+$('#importFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result);
+    if(!d.days||!d.meta){ alert('檔案格式不符'); return; }
+    state=d; curDayId=null; persist(); render(); flash('已匯入 ✓');
+  }catch(err){ alert('無法讀取此檔'); } };
+  r.readAsText(f); e.target.value='';
+};
+$('#resetBtn').onclick=()=>{ if(!confirm('還原成 Excel 原始行程?目前的修改會被覆蓋。'))return;
+  state=JSON.parse(JSON.stringify(SEED)); curDayId=null; persist(); render(); flash('已還原原始行程'); };
+
+/* ============ 啟動 ============ */
+(async()=>{ await loadState(); render(); if(!storageOK) flash('提示:可用匯出備份保存資料'); })();
+</script>
+</body>
+</html>
